@@ -1,1 +1,76 @@
+QUES 1 [Implement Stack using Arrays]
 
+QUES 2 [Implement Queue using Arrays]
+QUES 3 [Implement Stack using LL]
+QUES 4 [Implement Queue using LL]
+QUES 5 [Valid Parentheses]
+QUES 6 [Prefix to Infix]
+QUES 7 [Prefix to Postfix]
+QUES 8 [Postfix to Infix]
+QUES 9 [Next Greater Element]
+
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Stack<Integer> stack = new Stack<>();        
+        Map<Integer, Integer> nextGreater = new HashMap<>();
+        for (int num : nums2) {
+           
+            while (!stack.isEmpty() && num > stack.peek()) {
+                nextGreater.put(stack.pop(), num);
+            }
+            stack.push(num);
+        }
+
+        while (!stack.isEmpty()) {
+            nextGreater.put(stack.pop(), -1);
+        }
+
+        int[] result = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            result[i] = nextGreater.get(nums1[i]);
+        }
+
+        return result;
+    
+    
+    }
+}
+
+QUES 11 [First negative in window of size k]
+QUES 12 [Reverse first K of a Queue]
+QUES 13 [Generate Binary Numbers]
+
+QUES 14 [Implement Stack using Queue]
+QUES 15 [Implement Queue using Stack]
+
+QUES 16 [Min Stack]
+
+QUES 17 [Next smaller]
+
+QUES 18 [Largest Rectangke in Histogram]
+
+class Solution {
+  public int largestRectangleArea(int[] heights) {
+    int ans = 0;
+    Deque<Integer> stack = new ArrayDeque<>();
+
+    for (int i = 0; i <= heights.length; ++i) {
+      while (!stack.isEmpty() && (i == heights.length || heights[stack.peek()] > heights[i])) {
+        final int h = heights[stack.pop()];
+        final int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+        ans = Math.max(ans, h * w);
+      }
+      stack.push(i);
+    }
+
+    return ans;
+  }
+}
+
+QUES 19 0[Sliding Window Maximum]
+
+QUES 20 [Design Twitter]
+
+QUES 21 [Maximal Rectangle]
+
+QUES 22 [ 2142 - C]
