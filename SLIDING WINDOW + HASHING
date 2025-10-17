@@ -1,1 +1,77 @@
+QUES 1 [Max Sum Subarray of size K]
+
+QUES 2 [Longest Subarray with Sum K]
+
+QUES 3 [Count Occurences of Anagrams]
+
+QUES 4 [Subarray Sum Equals K]
+
+QUES 5 [Subarray Sums Divisible by K]
+
+QUES 6 [Maximum Sum of Distinct Subarrays With Length K]
+
+QUES 7 [Fruit Into Baskets]
+
+QUES 8 [Longest Substring Without Repeating Characters]
+
+class Solution {
+  public int lengthOfLongestSubstring(String s) {
+    int ans = 0;
+    int[] count = new int[128];
+
+    for (int l = 0, r = 0; r < s.length(); ++r) {
+      ++count[s.charAt(r)];
+      while (count[s.charAt(r)] > 1)
+        --count[s.charAt(l++)];
+      ans = Math.max(ans, r - l + 1);
+    }
+
+    return ans;
+  }
+}
+
+QUES 9 [Longest Substring with At Least K Repeating Characters]
+
+QUES 10 [Maximum Points You Can Obtain from Cards]
+
+QUES 11 [First negative in every window of size k]
+
+QUES 12 [Minimum Window Substring]
+
+class Solution {
+  public String minWindow(String s, String t) {
+    int[] count = new int[128];
+    int required = t.length();
+    int bestLeft = -1;
+    int minLength = s.length() + 1;
+
+    for (final char c : t.toCharArray())
+      ++count[c];
+
+    for (int l = 0, r = 0; r < s.length(); ++r) {
+      if (--count[s.charAt(r)] >= 0)
+        --required;
+      while (required == 0) {
+        if (r - l + 1 < minLength) {
+          bestLeft = l;
+          minLength = r - l + 1;
+        }
+        if (++count[s.charAt(l++)] > 0)
+          ++required;
+      }
+    }
+
+    return bestLeft == -1 ? "" : s.substring(bestLeft, bestLeft + minLength);
+  }
+}
+
+
+QUES 13 [Sliding Window Maximum]
+
+QUES 14 [Majority Element]
+
+QUES 15 [Find Pair Given Difference]
+
+
+
 
