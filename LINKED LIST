@@ -1,1 +1,106 @@
+QUES 1 [Singly LL  implementation - ( insertion, deletion, traversal,searching )]
+
+QUES 2 [Middle of the Linked List]
+
+QUES 3 [Remove Nth Node From End of List   (length method, 2 pointer method )]
+
+QUES 4 [REVERSE LINKED LIST]
+
+class Solution {
+  public ListNode reverseList(ListNode head) {
+    if (head == null || head.next == null)
+      return head;
+
+    ListNode newHead = reverseList(head.next);
+    head.next.next = head;
+    head.next = null;
+    return newHead;
+  }
+}
+
+QUES 5 [Doubly LL  implementation - ( insertion, deletion, traversal,searching )]
+
+QUES 6 [Intersection of Two Linked Lists]
+
+QUES 7 [Design Browser History]
+
+QUES 8 [Detect Cycle  in LL]
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head == null || head.next == null) {
+            return false;
+        }
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow==fast) {
+                return true;
+            }
+        }
+        return false;
+        
+    }
+}
+
+QUES 9 [Starting point of of cycle in LL]
+
+class Solution {
+  public ListNode detectCycle(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+      if (slow == fast) {
+        slow = head;
+        while (slow != fast) {
+          slow = slow.next;
+          fast = fast.next;
+        }
+        return slow;
+      }
+    }
+
+    return null;
+  }
+}
+
+QUES 10 [Merge Two Sorted Lists]
+
+class Solution {
+  public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    if (list1 == null || list2 == null)
+      return list1 == null ? list2 : list1;
+    if (list1.val > list2.val) {
+      ListNode temp = list1;
+      list1 = list2;
+      list2 = temp;
+    }
+    list1.next = mergeTwoLists(list1.next, list2);
+    return list1;
+  }
+}
+
+QUES 11 [Delete the Middle Node of a Linked List]
+
+QUES 12 [Add Two Numbers]
+
+QUES 13 [Flattening a Linked List]
+
+QUES 14 [LRU Cache]
+
+QUES 15 [LFU Cache]
+
+QUES 16 [Sort List]
+
+QUES 17 [Reverse Nodes in k-Group]
+
+QUES 18 [DESIGN BROWSER HISTORY]
+
 
