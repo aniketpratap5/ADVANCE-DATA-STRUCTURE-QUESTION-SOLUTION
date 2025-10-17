@@ -1,1 +1,147 @@
+QUES 1
 
+QUES 2 [Find First and Last Position of Element in Sorted Array]
+
+class Solution {
+  public int[] searchRange(int[] nums, int target) {
+    final int l = firstGreaterEqual(nums, target);
+    if (l == nums.length || nums[l] != target)
+      return new int[] {-1, -1};
+    final int r = firstGreaterEqual(nums, target + 1) - 1;
+    return new int[] {l, r};
+  }
+
+  private int firstGreaterEqual(int[] arr, int target) {
+    int l = 0;
+    int r = arr.length;
+    while (l < r) {
+      final int m = (l + r) / 2;
+      if (arr[m] >= target)
+        r = m;
+      else
+        l = m + 1;
+    }
+    return l;
+  }
+}
+
+QUES 3 []
+
+QUES 4 [Search in Rotated Sorted Array]
+
+class Solution {
+  public int search(int[] nums, int target) {
+    int l = 0;
+    int r = nums.length - 1;
+
+    while (l <= r) {
+      final int m = (l + r) / 2;
+      if (nums[m] == target)
+        return m;
+      if (nums[l] <= nums[m]) {
+        if (nums[l] <= target && target < nums[m])
+          r = m - 1;
+        else
+          l = m + 1;
+      } else { 
+        if (nums[m] < target && target <= nums[r])
+          l = m + 1;
+        else
+          r = m - 1;
+      }
+    }
+
+    return -1;
+  }
+}
+
+QUES 5 [SEARCH INSERT POSITION]
+
+class Solution {
+  public int searchInsert(int[] nums, int target) {
+    int l = 0;
+    int r = nums.length;
+
+    while (l < r) {
+      final int m = (l + r) / 2;
+      if (nums[m] == target)
+        return m;
+      if (nums[m] < target)
+        l = m + 1;
+      else
+        r = m;
+    }
+
+    return l;
+  }
+}
+
+QUES 6 [SINGLE ELEMENT IN A SORTED ARRAY]
+
+QUES 7 [SEARCH IN ROTATED SORTED ARRAY II ]
+
+class Solution {
+  public boolean search(int[] nums, int target) {
+    int l = 0;
+    int r = nums.length - 1;
+
+    while (l <= r) {
+      final int m = (l + r) / 2;
+      if (nums[m] == target)
+        return true;
+      if (nums[l] == nums[m] && nums[m] == nums[r]) {
+        ++l;
+        --r;
+      } else if (nums[l] <= nums[m]) { // nums[l..m] are sorted
+        if (nums[l] <= target && target < nums[m])
+          r = m - 1;
+        else
+          l = m + 1;
+      } else { // nums[m..n - 1] are sorted
+        if (nums[m] < target && target <= nums[r])
+          l = m + 1;
+        else
+          r = m - 1;
+      }
+    }
+
+    return false;
+  }
+}
+
+
+QUES 8 [FIND MINIMUM IN ROTATED SORTED ARRAY]
+
+QUES 9 [FIND THE DUPLICATE NUMBER]
+
+QUES 10 [SEARCH A 2D MATRIX]
+
+class Solution {
+  public boolean searchMatrix(int[][] matrix, int target) {
+    if (matrix.length == 0)
+      return false;
+
+    final int m = matrix.length;
+    final int n = matrix[0].length;
+    int l = 0;
+    int r = m * n;
+
+    while (l < r) {
+      final int mid = (l + r) / 2;
+      final int i = mid / n;
+      final int j = mid % n;
+      if (matrix[i][j] == target)
+        return true;
+      if (matrix[i][j] < target)
+        l = mid + 1;
+      else
+        r = mid;
+    }
+
+    return false;
+  }
+}
+
+QUES 11 [FIND PEAK ELEMENT]
+
+QUES 12 [FIND PEAK ELEMENT II]
