@@ -1,0 +1,203 @@
+QUES 1 [TWO SUM]
+
+class Solution {
+  public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> numToIndex = new HashMap<>();
+
+    for (int i = 0; i < nums.length; ++i) {
+      if (numToIndex.containsKey(target - nums[i]))
+        return new int[] {numToIndex.get(target - nums[i]), i};
+      numToIndex.put(nums[i], i);
+    }
+
+    throw new IllegalArgumentException();
+  }
+}
+
+QUES 2 [3SUM]
+
+class Solution {
+  public List<List<Integer>> threeSum(int[] nums) {
+    if (nums.length < 3)
+      return new ArrayList<>();
+
+    List<List<Integer>> ans = new ArrayList<>();
+
+    Arrays.sort(nums);
+
+    for (int i = 0; i + 2 < nums.length; ++i) {
+      if (i > 0 && nums[i] == nums[i - 1])
+        continue;
+      int l = i + 1;
+      int r = nums.length - 1;
+      while (l < r) {
+        final int sum = nums[i] + nums[l] + nums[r];
+        if (sum == 0) {
+          ans.add(Arrays.asList(nums[i], nums[l++], nums[r--]));
+          while (l < r && nums[l] == nums[l - 1])
+            ++l;
+          while (l < r && nums[r] == nums[r + 1])
+            --r;
+        } else if (sum < 0) {
+          ++l;
+        } else {
+          --r;
+        }
+      }
+    }
+
+    return ans;
+  }
+}
+
+QUES3 [INTERSECTION OF TWO ARRAYS]
+
+QUES4 [SORT COLORS]
+
+class Solution {
+  public void sortColors(int[] nums) {
+    int l = 0;              
+    int r = nums.length - 1; 
+
+    for (int i = 0; i <= r;)
+      if (nums[i] == 0)
+        swap(nums, i++, l++);
+      else if (nums[i] == 1)
+        ++i;
+      else
+        .
+        swap(nums, i, r--);
+  }
+
+  private void swap(int[] nums, int i, int j) {
+    final int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+  }
+}
+
+QUES5 [CONTAINER WITH MOST WATER]
+
+class Solution {
+  public int maxArea(int[] height) {
+    int ans = 0;
+    int l = 0;
+    int r = height.length - 1;
+
+    while (l < r) {
+      final int minHeight = Math.min(height[l], height[r]);
+      ans = Math.max(ans, minHeight * (r - l));
+      if (height[l] < height[r])
+        ++l;
+      else
+        --r;
+    }
+
+    return ans;
+  }
+}
+
+QUES 6 [LONGEST PALINDROMIC SUBSTRING]
+
+class Solution {
+  public String longestPalindrome(String s) {
+    if (s.isEmpty())
+      return "";
+
+    int[] indices = {0, 0};
+
+    for (int i = 0; i < s.length(); ++i) {
+      int[] indices1 = extend(s, i, i);
+      if (indices1[1] - indices1[0] > indices[1] - indices[0])
+        indices = indices1;
+      if (i + 1 < s.length() && s.charAt(i) == s.charAt(i + 1)) {
+        int[] indices2 = extend(s, i, i + 1);
+        if (indices2[1] - indices2[0] > indices[1] - indices[0])
+          indices = indices2;
+      }
+    }
+
+    return s.substring(indices[0], indices[1] + 1);
+  }
+
+  // Returns the (start, end) indices of the longest palindrome extended from
+  // the substring s[i..j].
+  private int[] extend(final String s, int i, int j) {
+    for (; i >= 0 && j < s.length(); --i, ++j)
+      if (s.charAt(i) != s.charAt(j))
+        break;
+    return new int[] {i + 1, j - 1};
+  }
+}
+
+QUES 7 [NEXT PERMUTATION]
+
+class Solution {
+  public void nextPermutation(int[] nums) {
+    final int n = nums.length;
+
+    int i;
+    for (i = n - 2; i >= 0; --i)
+      if (nums[i] < nums[i + 1])
+        break;
+
+    if (i >= 0)
+      for (int j = n - 1; j > i; --j)
+        if (nums[j] > nums[i]) {
+          swap(nums, i, j);
+          break;
+        }
+
+    reverse(nums, i + 1, n - 1);
+  }
+
+  private void reverse(int[] nums, int l, int r) {
+    while (l < r)
+      swap(nums, l++, r--);
+  }
+
+  private void swap(int[] nums, int i, int j) {
+    final int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+  }
+}
+
+QUES 8 [MAXIMUM SUBARRAY]
+
+class Solution {
+  public int maxSubArray(int[] nums) {
+    int[] dp = new int[nums.length];
+
+    dp[0] = nums[0];
+    for (int i = 1; i < nums.length; ++i)
+      dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+
+    return Arrays.stream(dp).max().getAsInt();
+  }
+}
+
+QUES9 [REARRANGE ARRAY ELEMENT BY SIGN]
+
+QUES 10 [TRAPPING RAIN WATER]
+
+class Solution {
+  public int trap(int[] height) {
+    int n = height.length;
+    int ans = 0;
+    int[] l = new int[n]; 
+    int[] r = new int[n]; 
+
+    for (int i = 0; i < n; ++i)
+      l[i] = i == 0 ? height[i] : Math.max(height[i], l[i - 1]);
+
+    for (int i = n - 1; i >= 0; --i)
+      r[i] = i == n - 1 ? height[i] : Math.max(height[i], r[i + 1]);
+
+    for (int i = 0; i < n; ++i)
+      ans += Math.min(l[i], r[i]) - height[i];
+
+    return ans;
+  }
+}
+
