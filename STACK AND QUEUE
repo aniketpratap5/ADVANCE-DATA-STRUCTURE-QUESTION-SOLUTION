@@ -1,12 +1,312 @@
 QUES 1 [Implement Stack using Arrays]
 
+class myStack {
+
+    int[] arr;     
+    int top;       
+    int capacity;  
+    public myStack(int n) {
+        capacity = n;
+        arr = new int[n];
+        top = -1;
+    }
+
+    public boolean isEmpty() {
+        return (top == -1);
+    }
+
+    public boolean isFull() {
+        return (top == capacity - 1);
+    }
+
+    public void push(int x) {
+        if (!isFull()) {
+            arr[++top] = x;
+        }
+    }
+
+    public void pop() {
+        if (!isEmpty()) {
+            top--;
+        }
+    }
+
+    // Peek operation
+    public int peek() {
+        if (!isEmpty()) {
+            return arr[top];
+        }
+        return -1;  
+    }
+}
+
+
 QUES 2 [Implement Queue using Arrays]
+
+class myQueue {
+
+    int[] arr;
+    int front;
+    int rear;
+    int size;
+    int capacity;
+
+    public myQueue(int n) {
+        capacity = n;
+        arr = new int[n];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    public boolean isEmpty() {
+        return (size == 0);
+    }
+
+    public boolean isFull() {
+        return (size == capacity);
+    }
+
+    public void enqueue(int x) {
+        if (!isFull()) {
+            rear = (rear + 1) % capacity;
+            arr[rear] = x;
+            size++;
+        }
+    }
+
+    public void dequeue() {
+        if (!isEmpty()) {
+            front = (front + 1) % capacity;
+            size--;
+        }
+    }
+
+    public int getFront() {
+        if (!isEmpty()) {
+            return arr[front];
+        }
+        return -1;
+    }
+
+    public int getRear() {
+        if (!isEmpty()) {
+            return arr[rear];
+        }
+        return -1;
+    }
+}
+
+
 QUES 3 [Implement Stack using LL]
+
+class myStack {
+
+    private class Node {
+        int data;
+        Node next;
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    private Node top;
+    private int count;
+
+    public myStack() {
+        top = null;
+        count = 0;
+    }
+
+    public void push(int x) {
+        Node newNode = new Node(x);
+        newNode.next = top;
+        top = newNode;
+        count++;
+    }
+
+    public void pop() {
+        if (!isEmpty()) {
+            top = top.next;
+            count--;
+        }
+    }
+
+    public int peek() {
+        if (!isEmpty()) {
+            return top.data;
+        }
+        return -1;
+    }
+
+    public boolean isEmpty() {
+        return top == null;
+    }
+
+    public int size() {
+        return count;
+    }
+}
+
+
 QUES 4 [Implement Queue using LL]
+
+class myQueue {
+
+    private class Node {
+        int data;
+        Node next;
+        Node(int d) {
+            data = d;
+            next = null;
+        }
+    }
+
+    private Node front;
+    private Node rear;
+    private int count;
+
+    public myQueue() {
+        front = null;
+        rear = null;
+        count = 0;
+    }
+    public void enqueue(int x) {
+        Node newNode = new Node(x);
+        if (rear != null) {
+            rear.next = newNode;
+        }
+        rear = newNode;
+        if (front == null) {
+            front = rear;
+        }
+        count++;
+    }
+    public void dequeue() {
+        if (!isEmpty()) {
+            front = front.next;
+            if (front == null) {
+                rear = null;
+            }
+            count--;
+        }
+    }
+
+    public int getFront() {
+        if (!isEmpty()) {
+            return front.data;
+        }
+        return -1;
+    }
+
+    public boolean isEmpty() {
+        return front == null;
+    }
+    public int size() {
+        return count;
+    }
+}
+
 QUES 5 [Valid Parentheses]
+
+class Solution {
+  public boolean isValid(String s) {
+    Deque<Character> stack = new ArrayDeque<>();
+
+    for (final char c : s.toCharArray())
+      if (c == '(')
+        stack.push(')');
+      else if (c == '{')
+        stack.push('}');
+      else if (c == '[')
+        stack.push(']');
+      else if (stack.isEmpty() || stack.pop() != c)
+        return false;
+
+    return stack.isEmpty();
+  }
+}
+
 QUES 6 [Prefix to Infix]
+
+import java.util.*;
+
+class Solution {
+
+    public String preToInfix(String prefix) {
+        Stack<String> stack = new Stack<>();
+
+        for (int i = prefix.length() - 1; i >= 0; i--) {
+            char c = prefix.charAt(i);
+
+            if (Character.isLetter(c)) {
+                stack.push(c + "");
+            } else { 
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                String exp = "(" + op1 + c + op2 + ")";
+                stack.push(exp);
+            }
+        }
+
+        return stack.pop();
+    }
+}
+
+
 QUES 7 [Prefix to Postfix]
+
+import java.util.*;
+
+class Solution {
+    public String preToPost(String pre_exp) {
+        Stack<String> stack = new Stack<>();
+
+        for (int i = pre_exp.length() - 1; i >= 0; i--) {
+            char c = pre_exp.charAt(i);
+
+            if (Character.isLetter(c)) {
+                stack.push(c + "");
+            } else {
+                String op1 = stack.pop();
+                String op2 = stack.pop();
+                String exp = op1 + op2 + c;
+                stack.push(exp);
+            }
+        }
+
+        return stack.pop();
+    }
+}
+
+
 QUES 8 [Postfix to Infix]
+
+import java.util.*;
+
+class Solution {
+    public String postToInfix(String post_exp) {
+        Stack<String> stack = new Stack<>();
+
+        for (int i = 0; i < post_exp.length(); i++) {
+            char c = post_exp.charAt(i);
+
+            if (Character.isLetter(c)) {
+                stack.push(c + "");
+            } else {
+                String op2 = stack.pop();
+                String op1 = stack.pop();
+                String exp = "(" + op1 + c + op2 + ")";
+                stack.push(exp);
+            }
+        }
+
+        return stack.pop();
+    }
+}
+
+
 QUES 9 [Next Greater Element]
 
 class Solution {
@@ -37,15 +337,208 @@ class Solution {
 }
 
 QUES 11 [First negative in window of size k]
+
+import java.util.*;
+
+class Solution {
+    public List<Integer> firstNegInt(int[] arr, int k) {
+        List<Integer> result = new ArrayList<>();
+        Deque<Integer> q = new LinkedList<>();
+        int n = arr.length;
+
+        for (int i = 0; i < k; i++) {
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        for (int i = k; i < n; i++) {
+            if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+            else result.add(0);
+
+            while (!q.isEmpty() && q.peekFirst() <= i - k) q.pollFirst();
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+        else result.add(0);
+
+        return result;
+    }
+}
+
+
 QUES 12 [Reverse first K of a Queue]
+
+import java.util.*;
+
+class Solution {
+    public Queue<Integer> reverseFirstK(Queue<Integer> q, int k) {
+        if (q.size() < k) return q;
+
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < k; i++) {
+            stack.push(q.poll());
+        }
+
+        while (!stack.isEmpty()) {
+            q.add(stack.pop());
+        }
+
+        int size = q.size();
+        for (int i = 0; i < size - k; i++) {
+            q.add(q.poll());
+        }
+
+        return q;
+    }
+}
+
+
 QUES 13 [Generate Binary Numbers]
 
+import java.util.*;
+
+class Solution {
+    public ArrayList<String> generateBinary(int n) {
+        ArrayList<String> result = new ArrayList<>();
+        Queue<String> q = new LinkedList<>();
+
+        q.add("1");
+
+        for (int i = 0; i < n; i++) {
+            String s = q.poll();
+            result.add(s);
+
+            q.add(s + "0");
+            q.add(s + "1");
+        }
+
+        return result;
+    }
+}
+
+
 QUES 14 [Implement Stack using Queue]
+
+import java.util.*;
+
+class MyStack {
+    private Queue<Integer> q1;
+    private Queue<Integer> q2;
+
+    public MyStack() {
+        q1 = new LinkedList<>();
+        q2 = new LinkedList<>();
+    }
+
+    public void push(int x) {
+        q2.add(x);
+        while (!q1.isEmpty()) {
+            q2.add(q1.poll());
+        }
+        // Swap q1 and q2
+        Queue<Integer> temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+
+    public int pop() {
+        return q1.poll();
+    }
+
+    public int top() {
+        return q1.peek();
+    }
+
+    public boolean empty() {
+        return q1.isEmpty();
+    }
+}
+
+
 QUES 15 [Implement Queue using Stack]
+
+import java.util.*;
+
+class MyQueue {
+    private Stack<Integer> inStack;
+    private Stack<Integer> outStack;
+
+    public MyQueue() {
+        inStack = new Stack<>();
+        outStack = new Stack<>();
+    }
+
+    public void push(int x) {
+        inStack.push(x);
+    }
+
+    public int pop() {
+        if (outStack.isEmpty()) {
+            while (!inStack.isEmpty()) {
+                outStack.push(inStack.pop());
+            }
+        }
+        return outStack.pop();
+    }
+
+    public int peek() {
+        if (outStack.isEmpty()) {
+            while (!inStack.isEmpty()) {
+                outStack.push(inStack.pop());
+            }
+        }
+        return outStack.peek();
+    }
+
+    public boolean empty() {
+        return inStack.isEmpty() && outStack.isEmpty();
+    }
+}
+
 
 QUES 16 [Min Stack]
 
+import java.util.*;
+
+class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        stack.push(val);
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
+        }
+    }
+    
+    public void pop() {
+        if (!stack.isEmpty()) {
+            int val = stack.pop();
+            if (val == minStack.peek()) {
+                minStack.pop();
+            }
+        }
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+
+
 QUES 17 [Next smaller]
+
+
 
 QUES 18 [Largest Rectangke in Histogram]
 
