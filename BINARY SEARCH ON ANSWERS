@@ -19,17 +19,200 @@ class Solution {
 
 QUES 2 [ALLOCATE MINIMUM PAGES]
 
+class Solution {
+    public int findPages(int[] arr, int k) {
+        // code here
+        int n = arr.length;
+        if (k > n) return -1; 
+
+        int low = Integer.MIN_VALUE;
+        int high = 0;
+        for (int pages : arr) {
+            low = Math.max(low, pages); 
+            high += pages; 
+        }
+
+        int result = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (isPossible(arr, n, k, mid)) {
+                result = mid;
+                high = mid - 1; 
+            } else {
+                low = mid + 1; 
+            }
+        }
+        return result;
+    }
+
+    private static boolean isPossible(int[] arr, int n, int k, int maxPages) {
+        int students = 1;
+        int currentPages = 0;
+
+        for (int pages : arr) {
+            if (currentPages + pages > maxPages) {
+                students++;
+                currentPages = pages;
+                if (students > k) return false;
+            } else {
+                currentPages += pages;
+            }
+        }
+        return true;
+    
+
+    
+    }
+}
+
 QUES 3 [KOKO EATING BANANAS]
+
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        int low = 1;
+        int high = 0;
+        for (int pile : piles) {
+            high = Math.max(high, pile);
+        }
+
+        int result = high;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canEatAll(piles, h, mid)) {
+                result = mid;  
+                high = mid - 1; 
+            } else {
+                low = mid + 1; 
+            }
+        }
+        return result;
+    }
+
+    private boolean canEatAll(int[] piles, int h, int k) {
+        long hours = 0;
+        for (int pile : piles) {
+            hours += (pile + (long)k - 1) / k;
+        }
+        return hours <= h;
+    }
+}
+
 
 QUES 4 [Kth Missing Positive Number]
 
+class Solution {
+    public int findKthPositive(int[] arr, int k) {
+        int missingelement = 0;
+        int current = 1;
+        int index = 0;
+
+        while(true) {
+            if (index < arr.length && arr[index] == current) {
+                index++;
+            
+            }else {
+                missingelement++;
+                if (missingelement==k){
+                    return current;
+
+                }
+            }
+        current++;
+
+        }
+        
+    }
+}
+
 QUES 5 [Capacity To Ship Packages Within D Days]
+
+class Solution {
+    public int shipWithinDays(int[] weights, int days) {
+        int maxWeight = 0;
+        int sumWeight = 0;
+        for (int w : weights) {
+            maxWeight = Math.max(maxWeight, w);
+            sumWeight += w;
+        }
+
+        int low = maxWeight, high = sumWeight;
+        int result = sumWeight;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canShip(weights, days, mid)) {
+                result = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1; 
+            }
+        }
+
+        return result;
+    }
+
+    private boolean canShip(int[] weights, int days, int capacity) {
+        int neededDays = 1;
+        int currSum = 0;
+
+        for (int w : weights) {
+            if (currSum + w > capacity) {
+                neededDays++;
+                currSum = w;
+            } else {
+                currSum += w;
+            }
+        }
+
+        return neededDays <= days;
+    }
+}
+
 
 QUES 6 [Minimum Number of Days to Make m Bouquets]
 
-QUES 7 [Median of Two Sorted Arrays]
+class Solution {
+    public int minDays(int[] bloomDay, int m, int k) {
+        long n = bloomDay.length;
+        if((long)m* k>n) return -1;
 
-QUES 8 [MEDIAN OF TWO SORTED ARRAYS]
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        for(int day: bloomDay) {
+            low = Math.min(low, day);
+            high = Math.max(high, day);
+        }
+        int result = -1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canMake(bloomDay, m, k, mid)) {
+                result = mid;
+                high = mid - 1; 
+            } else {
+                low = mid + 1; 
+            }
+        }
+        return result;
+    }
+
+    private boolean canMake(int[] bloomDay, int m, int k, int days) {
+        int bouquets = 0, flowers = 0;
+        for (int bloom : bloomDay) {
+            if (bloom <= days) {
+                flowers++;
+                if (flowers == k) {
+                    bouquets++;
+                    flowers = 0;
+                }
+            } else {
+                flowers = 0;
+            }
+        }
+        return bouquets>=m;
+    }
+}
+
+QUES 7 [Median of Two Sorted Arrays]
 
 class Solution {
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -62,4 +245,104 @@ class Solution {
   }
 }
 
+QUES9 [The Painter's Partition Problem-II]
+
+class Solution {
+    public int minTime(int[] arr, int k) {
+        int low = 0;
+        int high = 0;
+        for (int length : arr) {
+            low = Math.max(low, length);  // max single board
+            high += length;               // sum of all boards
+        }
+
+        int result = high;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (isPossible(arr, k, mid)) {
+                result = mid;      // feasible, try smaller max
+                high = mid - 1;
+            } else {
+                low = mid + 1;     // too small, need larger max
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isPossible(int[] arr, int k, int maxTime) {
+        int painters = 1;
+        int currentTime = 0;
+        for (int length : arr) {
+            if (currentTime + length > maxTime) {
+                painters++;
+                currentTime = length;
+                if (painters > k) return false;
+            } else {
+                currentTime += length;
+            }
+        }
+        return true;
+    }
+}
+
+
 QUES 9 [AGGRESIVE COWS]
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class AggressiveCows {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int c = sc.nextInt();
+            int[] stalls = new int[n];
+            for (int i = 0; i < n; i++) {
+                stalls[i] = sc.nextInt();
+            }
+
+            Arrays.sort(stalls);
+            int result = largestMinDistance(stalls, c);
+            System.out.println(result);
+        }
+        sc.close();
+    }
+
+    private static int largestMinDistance(int[] stalls, int cows) {
+        int low = 1;
+        int high = stalls[stalls.length - 1] - stalls[0];
+        int result = 0;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (canPlace(stalls, cows, mid)) {
+                result = mid;       // possible, try larger distance
+                low = mid + 1;
+            } else {
+                high = mid - 1;     // too large, try smaller distance
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean canPlace(int[] stalls, int cows, int distance) {
+        int count = 1;
+        int lastPos = stalls[0];
+
+        for (int i = 1; i < stalls.length; i++) {
+            if (stalls[i] - lastPos >= distance) {
+                count++;
+                lastPos = stalls[i];
+                if (count == cows) return true;
+            }
+        }
+
+        return false;
+    }
+}
+
