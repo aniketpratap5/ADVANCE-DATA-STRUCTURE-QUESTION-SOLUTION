@@ -1,16 +1,271 @@
 QUES 1 [Max Sum Subarray of size K]
 
+class Solution {
+    public static int maxSubarraySum(int[] arr, int k) {
+        if (arr.length < k) return 0;
+
+        int windowSum = 0;
+        for (int i = 0; i < k; i++) {
+            windowSum += arr[i];
+        }
+
+        int maxSum = windowSum;
+
+        for (int i = k; i < arr.length; i++) {
+            windowSum += arr[i] - arr[i - k];
+            maxSum = Math.max(maxSum, windowSum);
+        }
+
+        return maxSum;
+    }
+
+    public static void main(String[] args) {
+        int[] arr1 = {100, 200, 300, 400};
+        int k1 = 2;
+        System.out.println(maxSubarraySum(arr1, k1)); // 700
+
+        int[] arr2 = {1, 4, 2, 10, 23, 3, 1, 0, 20};
+        int k2 = 4;
+        System.out.println(maxSubarraySum(arr2, k2)); // 39
+
+        int[] arr3 = {100, 200, 300, 400};
+        int k3 = 1;
+        System.out.println(maxSubarraySum(arr3, k3)); // 400
+    }
+}
+
+
 QUES 2 [Longest Subarray with Sum K]
+
+class Solution {
+    public int longestSubarray(int[] arr, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int sum = 0, maxLength = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+            if (sum == k) maxLength = i + 1;
+            if (map.containsKey(sum - k)) maxLength = Math.max(maxLength, i - map.get(sum - k));
+            map.putIfAbsent(sum, i);
+        }
+        return maxLength;
+    }
+
+    public static void main(String[] args) {
+        Solution ob = new Solution();
+        int[] nums = {10, 5, 2, 7, 1, -10};
+        int k = 15;
+        int ans = ob.longestSubarray(nums, k);
+        System.out.println(ans); // Output: 6
+    }
+}
+
 
 QUES 3 [Count Occurences of Anagrams]
 
+class Solution {
+    public int search(String txt, String pat) {
+        int n = txt.length();
+        int k = pat.length();
+        if (k > n) return 0;
+
+        int[] patFreq = new int[26];
+        int[] windowFreq = new int[26];
+
+        for (char c : pat.toCharArray()) {
+            patFreq[c - 'a']++;
+        }
+
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            windowFreq[txt.charAt(i) - 'a']++;
+
+            if (i >= k) {
+                windowFreq[txt.charAt(i - k) - 'a']--;
+            }
+
+            if (i >= k - 1 && matches(patFreq, windowFreq)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private boolean matches(int[] patFreq, int[] windowFreq) {
+        for (int i = 0; i < 26; i++) {
+            if (patFreq[i] != windowFreq[i]) return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Solution ob = new Solution();
+
+        String txt1 = "forxxorfxdofr";
+        String pat1 = "for";
+        System.out.println(ob.search(txt1, pat1)); // Output: 3
+
+        String txt2 = "aabaabaa";
+        String pat2 = "aaba";
+        System.out.println(ob.search(txt2, pat2)); // Output: 4
+    }
+}
+
+
 QUES 4 [Subarray Sum Equals K]
+
+import java.util.HashMap;
+
+class Solution {
+    public static int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1); 
+        int sum = 0;
+        int count = 0;
+
+        for (int num : nums) {
+            sum += num;
+            if (map.containsKey(sum - k)) {
+                count += map.get(sum - k);
+            }
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {1, 1, 1};
+        int k1 = 2;
+        System.out.println(subarraySum(nums1, k1)); 
+
+        int[] nums2 = {1, 2, 3};
+        int k2 = 3;
+        System.out.println(subarraySum(nums2, k2)); 
+    }
+}
+
 
 QUES 5 [Subarray Sums Divisible by K]
 
+import java.util.HashMap;
+
+class Solution {
+    public static int subarraysDivByK(int[] nums, int k) {
+        HashMap<Integer, Integer> modCount = new HashMap<>();
+        modCount.put(0, 1); 
+        int sum = 0;
+        int count = 0;
+
+        for (int num : nums) {
+            sum += num;
+            int mod = ((sum % k) + k) % k; 
+
+            if (modCount.containsKey(mod)) {
+                count += modCount.get(mod);
+            }
+
+            modCount.put(mod, modCount.getOrDefault(mod, 0) + 1);
+        }
+
+        return count;
+    }
+
+    public static void main(String[] args) {
+        int[] nums1 = {4, 5, 0, -2, -3, 1};
+        int k1 = 5;
+        System.out.println(subarraysDivByK(nums1, k1)); 
+
+        int[] nums2 = {5};
+        int k2 = 9;
+        System.out.println(subarraysDivByK(nums2, k2)); 
+    }
+}
+
+
 QUES 6 [Maximum Sum of Distinct Subarrays With Length K]
 
+import java.util.HashMap;
+
+class Solution {
+    public static long maximumSubarraySum(int[] nums, int k) {
+        int n = nums.length;
+        if (k > n) return 0; // Cannot have subarray of length k
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int left = 0;
+        long windowSum = 0;
+        long maxSum = 0;
+
+        for (int right = 0; right < n; right++) {
+            map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+            windowSum += nums[right];
+
+            while (map.get(nums[right]) > 1) {
+                map.put(nums[left], map.get(nums[left]) - 1);
+                windowSum -= nums[left];
+                left++;
+            }
+
+            if (right - left + 1 == k) {
+                maxSum = Math.max(maxSum, windowSum);
+                map.put(nums[left], map.get(nums[left]) - 1);
+                windowSum -= nums[left];
+                left++;
+            }
+        }
+
+        return maxSum;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = new int[179];
+        for (int i = 0; i < 179; i++) nums[i] = i + 1;
+        int k = 100_000;
+
+        System.out.println(maximumSubarraySum(nums, k)); // Output: 0
+    }
+}
+
+
 QUES 7 [Fruit Into Baskets]
+
+import java.util.HashMap;
+
+class Solution {
+    public static int totalFruit(int[] fruits) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int left = 0, maxFruits = 0;
+
+        for (int right = 0; right < fruits.length; right++) {
+            map.put(fruits[right], map.getOrDefault(fruits[right], 0) + 1);
+
+            while (map.size() > 2) {
+                map.put(fruits[left], map.get(fruits[left]) - 1);
+                if (map.get(fruits[left]) == 0) {
+                    map.remove(fruits[left]);
+                }
+                left++;
+            }
+
+            maxFruits = Math.max(maxFruits, right - left + 1);
+        }
+
+        return maxFruits;
+    }
+
+    public static void main(String[] args) {
+        int[] fruits1 = {1, 2, 1};
+        System.out.println(totalFruit(fruits1)); // Output: 3
+
+        int[] fruits2 = {0, 1, 2, 2};
+        System.out.println(totalFruit(fruits2)); // Output: 3
+
+        int[] fruits3 = {1, 2, 3, 2, 2};
+        System.out.println(totalFruit(fruits3)); // Output: 4
+    }
+}
+
 
 QUES 8 [Longest Substring Without Repeating Characters]
 
@@ -31,6 +286,8 @@ class Solution {
 }
 
 QUES 9 [Longest Substring with At Least K Repeating Characters]
+
+
 
 QUES 10 [Maximum Points You Can Obtain from Cards]
 
