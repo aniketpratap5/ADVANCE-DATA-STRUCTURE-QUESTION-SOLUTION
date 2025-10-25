@@ -1,8 +1,96 @@
 QUES 1 [Singly LL  implementation - ( insertion, deletion, traversal,searching )]
 
+class Node {
+    int data;
+    Node next;
+    Node(int data) { this.data = data; }
+}
+
+class SinglyLinkedList {
+    Node head;
+
+    void insert(int data) {
+        Node newNode = new Node(data);
+        if (head == null) { head = newNode; return; }
+        Node temp = head;
+        while (temp.next != null) temp = temp.next;
+        temp.next = newNode;
+    }
+
+    void delete(int key) {
+        if (head == null) return;
+        if (head.data == key) { head = head.next; return; }
+        Node temp = head;
+        while (temp.next != null && temp.next.data != key) temp = temp.next;
+        if (temp.next != null) temp.next = temp.next.next;
+    }
+
+    boolean search(int key) {
+        Node temp = head;
+        while (temp != null) {
+            if (temp.data == key) return true;
+            temp = temp.next;
+        }
+        return false;
+    }
+
+    void traverse() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        SinglyLinkedList list = new SinglyLinkedList();
+        list.insert(10);
+        list.insert(20);
+        list.insert(30);
+        list.traverse();
+        list.delete(20);
+        list.traverse();
+        System.out.println(list.search(30));
+        System.out.println(list.search(40));
+    }
+}
+
+
 QUES 2 [Middle of the Linked List]
 
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast!=null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}
+
 QUES 3 [Remove Nth Node From End of List   (length method, 2 pointer method )]
+
+class Solution {
+  public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode slow = head;
+    ListNode fast = head;
+
+    while (n-- > 0)
+      fast = fast.next;
+    if (fast == null)
+      return head.next;
+
+    while (fast.next != null) {
+      slow = slow.next;
+      fast = fast.next;
+    }
+    slow.next = slow.next.next;
+
+    return head;
+  }
+}
 
 QUES 4 [REVERSE LINKED LIST]
 
@@ -20,9 +108,132 @@ class Solution {
 
 QUES 5 [Doubly LL  implementation - ( insertion, deletion, traversal,searching )]
 
+class Node {
+    int data;
+    Node prev, next;
+    Node(int data) { this.data = data; }
+}
+
+class DoublyLinkedList {
+    Node head;
+
+    void insert(int data) {
+        Node newNode = new Node(data);
+        if (head == null) { head = newNode; return; }
+        Node temp = head;
+        while (temp.next != null) temp = temp.next;
+        temp.next = newNode;
+        newNode.prev = temp;
+    }
+
+    void delete(int key) {
+        if (head == null) return;
+        if (head.data == key) {
+            head = head.next;
+            if (head != null) head.prev = null;
+            return;
+        }
+        Node temp = head;
+        while (temp != null && temp.data != key) temp = temp.next;
+        if (temp == null) return;
+        if (temp.next != null) temp.next.prev = temp.prev;
+        if (temp.prev != null) temp.prev.next = temp.next;
+    }
+
+    boolean search(int key) {
+        Node temp = head;
+        while (temp != null) {
+            if (temp.data == key) return true;
+            temp = temp.next;
+        }
+        return false;
+    }
+
+    void traverse() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " ");
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        DoublyLinkedList list = new DoublyLinkedList();
+        list.insert(10);
+        list.insert(20);
+        list.insert(30);
+        list.traverse();
+        list.delete(20);
+        list.traverse();
+        System.out.println(list.search(30));
+        System.out.println(list.search(40));
+    }
+}
+
+
 QUES 6 [Intersection of Two Linked Lists]
 
+
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null) return null;
+        ListNode a = headA, b = headB;
+        while (a != b) {
+            a = (a == null) ? headB : a.next;
+            b = (b == null) ? headA : b.next;
+        }
+        return a;
+        
+    }
+}
+
 QUES 7 [Design Browser History]
+
+import java.util.*;
+
+class BrowserHistory {
+    List<String> history;
+    int curr;
+
+    public BrowserHistory(String homepage) {
+        history = new ArrayList<>();
+        history.add(homepage);
+        curr = 0;
+    }
+
+    public void visit(String url) {
+        while (history.size() > curr + 1)
+            history.remove(history.size() - 1);
+        history.add(url);
+        curr++;
+    }
+
+    public String back(int steps) {
+        curr = Math.max(0, curr - steps);
+        return history.get(curr);
+    }
+
+    public String forward(int steps) {
+        curr = Math.min(history.size() - 1, curr + steps);
+        return history.get(curr);
+    }
+
+    public static void main(String[] args) {
+        BrowserHistory bh = new BrowserHistory("leetcode.com");
+        bh.visit("google.com");
+        bh.visit("facebook.com");
+        bh.visit("youtube.com");
+        System.out.println(bh.back(1));
+        System.out.println(bh.back(1));
+        System.out.println(bh.forward(1));
+        bh.visit("linkedin.com");
+        System.out.println(bh.forward(2));
+        System.out.println(bh.back(2));
+        System.out.println(bh.back(7));
+    }
+}
+
 
 QUES 8 [Detect Cycle  in LL]
 
@@ -89,18 +300,273 @@ class Solution {
 
 QUES 11 [Delete the Middle Node of a Linked List]
 
+class Solution {
+    public ListNode deleteMiddle(ListNode head) {
+        if(head == null || head.next == null) return null;
+        ListNode slow = head, fast = head, prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        prev.next = slow.next;
+        return head;
+    }
+}
+
 QUES 12 [Add Two Numbers]
+
+class Solution {
+  public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode curr = dummy;
+    int carry = 0;
+
+    while (l1 != null || l2 != null || carry > 0) {
+      if (l1 != null) {
+        carry += l1.val;
+        l1 = l1.next;
+      }
+      if (l2 != null) {
+        carry += l2.val;
+        l2 = l2.next;
+      }
+      curr.next = new ListNode(carry % 10);
+      carry /= 10;
+      curr = curr.next;
+    }
+
+    return dummy.next;
+  }
+}
 
 QUES 13 [Flattening a Linked List]
 
+import java.util.*;
+
+class Solution {
+    public List<Integer> firstNegInt(int[] arr, int k) {
+        List<Integer> result = new ArrayList<>();
+        Deque<Integer> q = new LinkedList<>();
+        int n = arr.length;
+
+        for (int i = 0; i < k; i++) {
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        for (int i = k; i < n; i++) {
+            if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+            else result.add(0);
+
+            while (!q.isEmpty() && q.peekFirst() <= i - k) q.pollFirst();
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+        else result.add(0);
+
+        return result;
+    }
+}
+
+
 QUES 14 [LRU Cache]
+
+import java.util.*;
+
+class LRUCache {
+    class Node {
+        int key, value;
+        Node prev, next;
+        Node(int k, int v) { key = k; value = v; }
+    }
+
+    int capacity;
+    Map<Integer, Node> map;
+    Node head, tail;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap<>();
+        head = new Node(0, 0);
+        tail = new Node(0, 0);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    private void remove(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void addToFront(Node node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        Node node = map.get(key);
+        remove(node);
+        addToFront(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            remove(node);
+            addToFront(node);
+        } else {
+            if (map.size() == capacity) {
+                Node lru = tail.prev;
+                remove(lru);
+                map.remove(lru.key);
+            }
+            Node newNode = new Node(key, value);
+            map.put(key, newNode);
+            addToFront(newNode);
+        }
+    }
+
+   
+}
+
 
 QUES 15 [LFU Cache]
 
+import java.util.*;
+
+class LFUCache {
+    private int capacity, minFreq;
+    private Map<Integer, Integer> keyToVal;
+    private Map<Integer, Integer> keyToFreq;
+    private Map<Integer, LinkedHashSet<Integer>> freqToKeys;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.minFreq = 0;
+        keyToVal = new HashMap<>();
+        keyToFreq = new HashMap<>();
+        freqToKeys = new HashMap<>();
+    }
+
+    public int get(int key) {
+        if (!keyToVal.containsKey(key)) return -1;
+        int freq = keyToFreq.get(key);
+        keyToFreq.put(key, freq + 1);
+        freqToKeys.get(freq).remove(key);
+        if (freqToKeys.get(freq).isEmpty()) {
+            freqToKeys.remove(freq);
+            if (minFreq == freq) minFreq++;
+        }
+        freqToKeys.computeIfAbsent(freq + 1, x -> new LinkedHashSet<>()).add(key);
+        return keyToVal.get(key);
+    }
+
+    public void put(int key, int value) {
+        if (capacity == 0) return;
+
+        if (keyToVal.containsKey(key)) {
+            keyToVal.put(key, value);
+            get(key); // update frequency
+            return;
+        }
+
+        if (keyToVal.size() == capacity) {
+            int evictKey = freqToKeys.get(minFreq).iterator().next();
+            freqToKeys.get(minFreq).remove(evictKey);
+            if (freqToKeys.get(minFreq).isEmpty()) freqToKeys.remove(minFreq);
+            keyToVal.remove(evictKey);
+            keyToFreq.remove(evictKey);
+        }
+
+        keyToVal.put(key, value);
+        keyToFreq.put(key, 1);
+        freqToKeys.computeIfAbsent(1, x -> new LinkedHashSet<>()).add(key);
+        minFreq = 1;
+    }
+
+}
+
+
 QUES 16 [Sort List]
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode mid = getMid(head);
+        ListNode left = sortList(head);
+        ListNode right = sortList(mid);
+        return merge(left, right);
+    }
+
+    private ListNode getMid(ListNode head) {
+        ListNode slow = head, fast = head, prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        prev.next = null;
+        return slow;
+    }
+
+    private ListNode merge(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) { curr.next = l1; l1 = l1.next; }
+            else { curr.next = l2; l2 = l2.next; }
+            curr = curr.next;
+        }
+        curr.next = (l1 != null) ? l1 : l2;
+        return dummy.next;
+    }
+}
+
 
 QUES 17 [Reverse Nodes in k-Group]
 
-QUES 18 [DESIGN BROWSER HISTORY]
+class Solution {
+    public ListNode reverseKGroup(ListNode head,int k) {
+        if(head == null || k ==1) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode curr = dummy,nex = dummy,prev = dummy;
+        int count = 0;
+        while(curr.next!= null) {
+            curr = curr.next;
+            count++;
+        }
+        while(count>= k) {
+            curr = prev.next;
+            nex = curr.next;
+            for(int i =1; i<k; i++){
+                curr.next = nex.next;
+                nex.next = prev.next;
+                prev.next = nex;
+                nex = curr.next;
+            }
+            prev = curr;
+            count -= k;
+        }
+        return dummy.next;
+    }
+}
+
 
 
