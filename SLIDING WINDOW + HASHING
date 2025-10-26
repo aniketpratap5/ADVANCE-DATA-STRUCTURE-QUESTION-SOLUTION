@@ -287,11 +287,92 @@ class Solution {
 
 QUES 9 [Longest Substring with At Least K Repeating Characters]
 
+class Solution {
+    public int longestSubstring(String s, int k) {
+        return helper(s,0,s.length(),k);
+        
+    }
 
+    private static int helper(String s, int start, int end, int k) {
+        if (end - start < k) return 0; 
+
+        int[] freq = new int[26];
+        for(int i = start;i<end; i++) {
+            freq[s.charAt(i)-'a']++;
+        }
+        for (int mid = start; mid < end; mid++) {
+            if (freq[s.charAt(mid) - 'a'] < k) {
+                int midNext = mid + 1;
+                while (midNext < end && freq[s.charAt(midNext) - 'a'] < k) {
+                    midNext++;
+                }
+                return Math.max(helper(s, start, mid, k), helper(s, midNext, end, k));
+            }
+        }
+        return end -start;
+    }
+}
 
 QUES 10 [Maximum Points You Can Obtain from Cards]
 
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        int n = cardPoints.length;
+        int total = 0;
+        
+        for(int point: cardPoints){
+            total+=point;
+        }
+            
+
+        if (k==n) return total;
+
+        int windowsize = n-k;
+        int currSum = 0;
+
+        for(int i=0;i<windowsize; i++) {
+            currSum += cardPoints[i];
+        }
+        int minSum = currSum;
+
+        for (int i = windowsize; i < n; i++) {
+            currSum += cardPoints[i] - cardPoints[i - windowsize];
+            minSum = Math.min(minSum, currSum);
+        }
+
+        return total - minSum;
+    }
+}
+
 QUES 11 [First negative in every window of size k]
+
+import java.util.*;
+
+class Solution {
+    public List<Integer> firstNegInt(int[] arr, int k) {
+        List<Integer> result = new ArrayList<>();
+        Deque<Integer> q = new LinkedList<>();
+        int n = arr.length;
+
+        for (int i = 0; i < k; i++) {
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        for (int i = k; i < n; i++) {
+            if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+            else result.add(0);
+
+            while (!q.isEmpty() && q.peekFirst() <= i - k) q.pollFirst();
+            if (arr[i] < 0) q.addLast(i);
+        }
+
+        if (!q.isEmpty()) result.add(arr[q.peekFirst()]);
+        else result.add(0);
+
+        return result;
+    }
+}
+
 
 QUES 12 [Minimum Window Substring]
 
@@ -325,10 +406,75 @@ class Solution {
 
 QUES 13 [Sliding Window Maximum]
 
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || k <= 0) return new int[0];
+        int n = nums.length;
+        int[] result = new int[n - k + 1];
+        Deque<Integer> dq = new ArrayDeque<>();
+        int ri = 0;
+        for (int i = 0; i < n; i++) {
+            while (!dq.isEmpty() && dq.peekFirst() < i - k + 1)
+                dq.pollFirst();
+
+            while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i])
+                dq.pollLast();
+             dq.offerLast(i);
+
+              if (i >= k - 1)
+                result[ri++] = nums[dq.peekFirst()];
+        }
+        return result;
+    }
+}
+
 QUES 14 [Majority Element]
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0, candidate = 0;
+        for(int num: nums) {
+            if(count ==0) {
+                candidate = num;
+   
+            }
+             count+= (num==candidate) ? 1:-1;
+            
+        }
+        return candidate;
+    }
+
+}
 
 QUES 15 [Find Pair Given Difference]
 
+class Solution {
+    public boolean findPair(int[] arr, int x) {
+        int n = arr.length;
+        Arrays.sort(arr);
+        int i = 0, j = 1;
+
+        while (i < n && j < n) {
+            if (i == j) {
+                j++; 
+                continue;
+            }
+
+            int diff = arr[j] - arr[i]; 
+            if (diff == x) {
+                return true;
+            } else if (diff < x) {
+                j++;
+            } else {
+                i++; 
+            }
+        }
+
+        return false; 
+    }
+
+    
+}
 
 
 
