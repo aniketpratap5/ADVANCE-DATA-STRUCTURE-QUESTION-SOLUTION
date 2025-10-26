@@ -52,6 +52,31 @@ class Solution {
 
 QUES3 [INTERSECTION OF TWO ARRAYS]
 
+import java.util.*;
+
+class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        Set<Integer> set1 = new HashSet<>();
+        for (int num : nums1) {
+            set1.add(num);
+        }
+        Set<Integer> intersection = new HashSet<>();
+        for (int num : nums2) {
+            if (set1.contains(num)) {
+                intersection.add(num);
+            }
+        }
+        int[] result = new int[intersection.size()];
+        int i = 0;
+        for (int num : intersection) {
+            result[i++] = num;
+        }
+
+        return result;
+    }
+}
+
+
 QUES4 [SORT COLORS]
 
 class Solution {
@@ -120,8 +145,6 @@ class Solution {
     return s.substring(indices[0], indices[1] + 1);
   }
 
-  // Returns the (start, end) indices of the longest palindrome extended from
-  // the substring s[i..j].
   private int[] extend(final String s, int i, int j) {
     for (; i >= 0 && j < s.length(); --i, ++j)
       if (s.charAt(i) != s.charAt(j))
@@ -178,6 +201,28 @@ class Solution {
 }
 
 QUES9 [REARRANGE ARRAY ELEMENT BY SIGN]
+
+class Solution {
+    public int[] rearrangeArray(int[] nums) {
+
+        List<Integer> pos = new ArrayList<>();
+        List<Integer> neg = new ArrayList<>();
+        for (int num : nums) {
+            if (num > 0) pos.add(num);
+            else neg.add(num);
+        }
+
+        int[] result = new int[nums.length];
+        int i = 0;
+        for (int j = 0; j < pos.size(); j++) {
+            result[i++] = pos.get(j);
+            result[i++] = neg.get(j);
+        }
+
+        return result;
+        
+    }
+}
 
 QUES 10 [TRAPPING RAIN WATER]
 
