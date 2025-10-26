@@ -538,6 +538,25 @@ class MinStack {
 
 QUES 17 [Next smaller]
 
+import java.util.*;
+
+public class Solution {
+    public ArrayList<Integer> nextSmallerEle(int[] arr) {
+        int n = arr.length;
+        ArrayList<Integer> nse = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) nse.add(-1);
+
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && stack.peek() >= arr[i]) {
+                stack.pop();
+            }
+            if (!stack.isEmpty()) nse.set(i, stack.peek());
+            stack.push(arr[i]);
+        }
+        return nse;
+    }
+}
 
 
 QUES 18 [Largest Rectangke in Histogram]
@@ -560,10 +579,140 @@ class Solution {
   }
 }
 
-QUES 19 0[Sliding Window Maximum]
+QUES 19 [Design Twitter]
 
-QUES 20 [Design Twitter]
+class Twitter {
+     private static class Tweet {
+        int id;
+        int time;
+        Tweet(int id, int time) {
+            this.id = id;
+            this.time = time;
+        }
+    }
+     private Map<Integer, Set<Integer>> followers;
+     private Map<Integer, List<Tweet>> tweets;
+     private int timestamp;
 
-QUES 21 [Maximal Rectangle]
+    public Twitter() {
+        followers = new HashMap<>();
+        tweets = new HashMap<>();
+        timestamp = 0;
+        
+    }
+    
+    public void postTweet(int userId, int tweetId) {
+         tweets.putIfAbsent(userId, new ArrayList<>());
+        tweets.get(userId).add(new Tweet(tweetId, timestamp++));
+        
+    }
+    
+    public List<Integer> getNewsFeed(int userId) {
+        PriorityQueue<Tweet> maxHeap = new PriorityQueue<>((a, b) -> b.time - a.time);
+        if (tweets.containsKey(userId)) {
+            maxHeap.addAll(tweets.get(userId));
+        }
+        if (followers.containsKey(userId)) {
+            for (int followeeId : followers.get(userId)) {
+                if (tweets.containsKey(followeeId)) {
+                    maxHeap.addAll(tweets.get(followeeId));
+                }
+            }
+        }
+        List<Integer> feed = new ArrayList<>();
+        int count = 0;
+        while (!maxHeap.isEmpty() && count < 10) {
+            feed.add(maxHeap.poll().id);
+            count++;
+        }
+        return feed;
+    }
+    
+    public void follow(int followerId, int followeeId) {
+        if (followerId == followeeId) return; // cannot follow self
+        followers.putIfAbsent(followerId, new HashSet<>());
+        followers.get(followerId).add(followeeId);
+        
+    }
+    
+    public void unfollow(int followerId, int followeeId) {
+        if (followers.containsKey(followerId)) {
+            followers.get(followerId).remove(followeeId);
+        }
+    }
+}
 
-QUES 22 [ 2142 - C]
+
+
+QUES 20 [Maximal Rectangle]
+
+class Solution {
+  public int maximalRectangle(char[][] matrix) {
+    if (matrix.length == 0)
+      return 0;
+
+    int ans = 0;
+    int[] hist = new int[matrix[0].length];
+
+    for (char[] row : matrix) {
+      for (int i = 0; i < row.length; ++i)
+        hist[i] = row[i] == '0' ? 0 : hist[i] + 1;
+      ans = Math.max(ans, largestRectangleArea(hist));
+    }
+
+    return ans;
+  }
+
+  private int largestRectangleArea(int[] heights) {
+    int ans = 0;
+    Deque<Integer> stack = new ArrayDeque<>();
+
+    for (int i = 0; i <= heights.length; ++i) {
+      while (!stack.isEmpty() && (i == heights.length || heights[stack.peek()] > heights[i])) {
+        final int h = heights[stack.pop()];
+        final int w = stack.isEmpty() ? i : i - stack.peek() - 1;
+        ans = Math.max(ans, h * w);
+      }
+      stack.push(i);
+    }
+
+    return ans;
+  }
+}
+
+
+QUES 21 [ 2142 - C]
+
+import java.util.Scanner;
+
+public class BrokenKeyboard {
+    
+    public static String processKeypresses(String s) {
+        StringBuilder result = new StringBuilder();
+        
+        for (char ch : s.toCharArray()) {
+            if (ch == 'b') {
+                for (int i = result.length() - 1; i >= 0; i--) {
+                    if (Character.isLowerCase(result.charAt(i))) {
+                        result.deleteCharAt(i);
+                        break;
+                    }
+                }
+            } else if (ch == 'B') {
+                // Remove last uppercase letter
+                for (int i = result.length() - 1; i >= 0; i--) {
+                    if (Character.isUpperCase(result.charAt(i))) {
+                        result.deleteCharAt(i);
+                        break;
+                    }
+                }
+            } else {
+                result.append(ch);
+            }
+        }
+        
+        return result.toString();
+    }
+
+}
+
